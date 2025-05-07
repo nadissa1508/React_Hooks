@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filtro de usuarios</title>
-    <link href="index.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <!-- React -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <!-- ReactDOM -->
@@ -12,12 +13,91 @@
     <!-- Babel para procesar JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body>
     <div id="root"></div>
     <script type="text/babel">
+        function UserSearch() {
+            const [search, setSearch] = React.useState('');
+            const [users, setUsers] = React.useState([
+                { id: 1, name: 'Angie Nadissa Vela López', description: 'Me gusta ver kdramas y la jardinería' },
+                { id: 2, name: 'Harry Potter', description: 'El niño que vivió, conocido por su cicatriz en forma de rayo' },
+                { id: 3, name: 'Hermione Granger', description: 'La bruja más inteligente de su generación, amante de los libros' },
+                { id: 4, name: 'Ron Weasley', description: 'Mejor amigo de Harry, conocido por su pelo rojo y su familia numerosa' },
+                { id: 5, name: 'Albus Dumbledore', description: 'Director de Hogwarts, considerado el mago más poderoso de su tiempo' },
+                { id: 6, name: 'Severus Snape', description: 'Maestro de pociones, conocido por su personalidad misteriosa' },
+                { id: 7, name: 'Draco Malfoy', description: 'Estudiante de Slytherin, rival de Harry Potter' },
+                { id: 8, name: 'Luna Lovegood', description: 'Estudiante de Ravenclaw, conocida por su personalidad excéntrica' },
+                { id: 9, name: 'Neville Longbottom', description: 'Estudiante de Gryffindor que demuestra gran valentía' },
+                { id: 10, name: 'Sirius Black', description: 'Padrino de Harry, conocido como "Canuto" cuando era fugitivo' },
+                { id: 11, name: 'Minerva McGonagall', description: 'Profesora de transformaciones y directora de Gryffindor' },
+                { id: 12, name: 'newt scamander', description: 'protector de criaturas mágicas y creador del mounstruoso libro de los mounstruos' }
+            ]); 
+            const [newUserName, setNewUserName] = React.useState('');
+            const [newUserDescription, setNewUserDescription] = React.useState('');
 
-    
-        
+            const filtredUsers = React.useMemo(() => {
+                console.log("Buscando usuarios...");
+                return users.filter(usuario =>
+                    usuario.name.includes(search) ||
+                    usuario.description.includes(search)
+                );
+            }, [search, users]);
+
+            function addUser() {
+                if (newUserName.trim() && newUserDescription.trim()) {
+                    const newUser = {
+                        id: users.length + 1,
+                        name: newUserName,
+                        description: newUserDescription
+                    };
+                    setUsers([...users, newUser]);
+                    setNewUserName('');
+                    setNewUserDescription('');
+                }
+            }
+
+            return (
+                <div className="container">
+                    <h1>Buscar Usuarios (useMemo)</h1>
+
+                    <input
+                        type="text"
+                        placeholder="nombre o descripción..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+
+                    <h2>Agregar nuevo usuario</h2>
+                    <input
+                        type="text"
+                        placeholder="Nombre del usuario"
+                        value={newUserName}
+                        onChange={(e) => setNewUserName(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Descripción del usuario"
+                        value={newUserDescription}
+                        onChange={(e) => setNewUserDescription(e.target.value)}
+                    />
+                    <button onClick={addUser}>Agregar Usuario</button>
+
+                    <h2>Lista de usuarios</h2>
+                    <ul>
+                        {filtredUsers.map(usuario => (
+                            <li key={usuario.id}>
+                                <strong>{usuario.name}</strong>: {usuario.description}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<UserSearch />);
     </script>
 </body>
+
 </html>

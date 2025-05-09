@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tema Claro/Oscuro</title>
-    <link href="index.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <!-- React -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <!-- ReactDOM -->
@@ -12,12 +13,70 @@
     <!-- Babel para procesar JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body>
     <div id="root"></div>
     <script type="text/babel">
 
+        const ThemeContext = React.createContext(null);
 
-        
+        function MyApp() {
+            const [theme, setTheme] = React.useState("light");
+
+            return (
+                <ThemeContext.Provider value={{ theme, setTheme }}>
+                    <h1>Aprendiendo a utilizar useContext</h1>
+                    <ThemeDisplay />
+                </ThemeContext.Provider>
+            );
+
+        }
+
+        function ThemeToggle() {
+            const { theme, setTheme } = React.useContext(ThemeContext);
+
+            function toggleTheme() {
+                if (theme === "light") {
+                    setTheme("dark");
+                } else {
+                    setTheme("light");
+                }
+            }
+
+            return (
+                <button onClick={toggleTheme} >
+                    Cambiar a {theme === "light" ? "oscuro" : "claro"}
+                </button>
+            );
+
+        }
+
+        function ThemeDisplay() {
+            const { theme } = React.useContext(ThemeContext);
+
+            let bgColor = "";
+            let color = "";
+
+            if (theme === "light") {
+                bgColor = "#fff";
+                color = "#000";
+            } else {
+                bgColor = "#000";
+                color = "#fff";
+            }
+
+            return (
+                <div style={{ padding: '20px', backgroundColor: bgColor, width: '450px', height: '350px' }} >
+                    <h2 style={{ color: color }} >Tema actual: {theme} </h2>
+                    <ThemeToggle />
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<MyApp />);
+
     </script>
 </body>
+
 </html>

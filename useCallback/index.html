@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Renderizado de hijos</title>
-    <link href="index.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <!-- React -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <!-- ReactDOM -->
@@ -17,8 +17,53 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        import { useCallback } from 'react';
 
+        function Card() {
+            const [randomNumber, setRandomNumber] = React.useState(0);
+            const [counter, setCounter] = React.useState(0);
+
+            const createRandomNumber = React.useCallback(() => {
+                setRandomNumber(Math.floor(Math.random() * 100));
+            }, []);
+
+            function addCounter() {
+                setCounter(counter + 1);
+            }
+
+            return (
+                <div className="card">
+                    <h1>Número aleatorio:</h1>
+                    <h2>{randomNumber}</h2>
+
+                    <h3>Botón optimizado</h3>
+                    <OptimizedButton onClick={createRandomNumber} />
+
+                    <h3>Botón normal</h3>
+                    <NormalButton onClick={addCounter} />
+                </div>
+            );
+        }
+
+        const OptimizedButton = React.memo(function OptimizedButton({ onClick }) {
+            console.log("Renderizando botón optimizado");
+            return (
+                <button onClick={onClick}>
+                    Generar número aleatorio
+                </button>
+            );
+        });
+
+        const NormalButton = React.memo(function NormalButton({ onClick }) {
+            console.log("Renderizando botón normal");
+            return (
+                <button onClick={onClick}>
+                    Sumar contador
+                </button>
+            );
+        });
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<Card />);
 
     </script>
 </body>
